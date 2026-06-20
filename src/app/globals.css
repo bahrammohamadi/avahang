@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --font-vazir: 'Vazirmatn', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-vazir), sans-serif;
+  background: #0d0d1a;
+  color: #f0eeff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7c5cbf;
+  border-radius: 3px;
+}
