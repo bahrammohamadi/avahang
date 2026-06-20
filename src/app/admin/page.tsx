@@ -3,6 +3,18 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+interface Artist {
+  id: string
+  name: string
+  bio?: string
+}
+
+interface Track {
+  id: string
+  title: string
+  artists?: { name: string }
+}
+
 export default function AdminPage() {
   const supabase = createClient()
 
@@ -16,8 +28,8 @@ export default function AdminPage() {
   const [sourceUrl, setSourceUrl] = useState('')
   const [trackMsg, setTrackMsg] = useState('')
 
-  const [artists, setArtists] = useState<any[]>([])
-  const [tracks, setTracks] = useState<any[]>([])
+  const [artists, setArtists] = useState<Artist[]>([])
+  const [tracks, setTracks] = useState<Track[]>([])
   const [tab, setTab] = useState<'artist' | 'track' | 'list'>('artist')
 
   async function addArtist() {
@@ -71,9 +83,11 @@ export default function AdminPage() {
 
   async function loadList() {
     const { data: a } = await supabase.from('artists').select('*')
-    const { data: t } = await supabase.from('tracks').select('*, artists(*)')
-    setArtists(a || [])
-    setTracks(t || [])
+    const { data: t } = await supabase
+      .from('tracks')
+      .select('*, artists(name)')
+    setArtists((a as Artist[]) || [])
+    setTracks((t as Track[]) || [])
     setTab('list')
   }
 
@@ -84,7 +98,6 @@ export default function AdminPage() {
         <h1 className="text-2xl font-bold text-white mb-2">🎛️ پنل ادمین آواهنگ</h1>
         <p className="text-purple-300 mb-6">مدیریت آهنگ‌ها و هنرمندان</p>
 
-        {/* تب‌ها */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab('artist')}
@@ -106,7 +119,6 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* فرم هنرمند */}
         {tab === 'artist' && (
           <div className="bg-white/5 rounded-xl p-6">
             <h2 className="text-white font-bold mb-4">افزودن هنرمند جدید</h2>
@@ -139,7 +151,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* فرم آهنگ */}
         {tab === 'track' && (
           <div className="bg-white/5 rounded-xl p-6">
             <h2 className="text-white font-bold mb-4">افزودن آهنگ جدید</h2>
@@ -186,7 +197,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* لیست */}
         {tab === 'list' && (
           <div className="flex flex-col gap-4">
             <div className="bg-white/5 rounded-xl p-4">
@@ -203,7 +213,7 @@ export default function AdminPage() {
               {tracks.map(t => (
                 <div key={t.id} className="border-b border-white/10 py-2">
                   <p className="text-white text-sm">{t.title}</p>
-                  <p className="text-purple-300 text-xs">{(t.artists as any)?.name}</p>
+                  <p className="text-purple-300 text-xs">{t.artists?.name}</p>
                   <p className="text-purple-400 text-xs mt-1 font-mono">{t.id}</p>
                 </div>
               ))}
