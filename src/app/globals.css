@@ -17,7 +17,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -27,4 +27,22 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #7c5cbf;
   border-radius: 3px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes pulse {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+.animate-pulse {
+  animation: pulse 0.6s ease-in-out infinite;
 }

@@ -1,85 +1,76 @@
 import { createServerSupabase } from '@/lib/supabase/server'
 import TrackList from '@/components/TrackList'
+import GenreFilter from '@/components/GenreFilter'
+
+async function getGenres() {
+  const supabase = await createServerSupabase()
+  const { data } = await supabase
+    .from('genres')
+    .select('*')
+    .order('name')
+  return data || []
+}
 
 export default async function HomePage() {
   const supabase = await createServerSupabase()
 
-  const { data: tracks } = await supabase
-    .from('tracks')
-    .select('*, artists(*), sources(*)')
-    .order('play_count', { ascending: false })
-    .limit(20)
-
-  const { data: genres } = await supabase
-    .from('genres')
-    .select('*')
-    .limit(10)
+  const [genres, { data: tracks }] = await Promise.all([
+    getGenres(),
+    supabase
+      .from('tracks')
+      .select('*, artists(*), sources(*)')
+      .order('play_count', { ascending: false })
+      .limit(20)
+  ])
 
   return (
-    <main className="min-h-screen bg-[#0d0d1a]">
+    <main className="min-h-screen p-6">
+      <div className="max-w-6xl mx-auto">
 
-      {/* هدر */}
-      <div className="flex items-center gap-3 px-4 pt-6 pb-4">
-        <button className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white text-lg">
-          ☰
-        </button>
-        <div className="flex-1 flex items-center gap-2 bg-white/10 rounded-xl px-4 py-2.5">
-          <span className="text-white/40">🔍</span>
-          <span className="text-white/40 text-sm">جستجو در آواهنگ...</span>
+        {/* هدر */}
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-white mb-2">
+            🎵 آواهنگ
+          </h1>
+          <p className="text-purple-300">
+            موزیک فارسی و موسیقی محلی ایران
+          </p>
         </div>
-      </div>
 
-      {/* بنر ترند */}
-      <div className="px-4 mb-6">
-        <h2 className="text-xl font-bold text-white mb-3">ترندهای امروز</h2>
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {tracks?.slice(0, 5).map((track) => (
-            <div
-              key={track.id}
-              className="min-w-[200px] h-[130px] rounded-2xl relative overflow-hidden flex-shrink-0"
-              style={{
-                background: `linear-gradient(135deg, #4a1d96, #7c3aed)`
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              <div className="absolute bottom-3 right-3 left-3">
-                <p className="text-white font-bold text-sm truncate">{track.title}</p>
-                <p className="text-white/70 text-xs truncate">
-                  🎵 {(track.artists as {name: string})?.name}
-                </p>
-              </div>
-              <div className="absolute top-3 left-3">
-                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white text-sm">
-                  ▶
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* جستجو */}
+        <div className="relative mb-8 max-w-md mx-auto">
+          <input
+            type="text"
+            placeholder="جستجو در آواهنگ..."
+            className="w-full bg-white/10 text-white rounded-full px-6 py-3 pr-12 outline-none border border-purple-700/30 focus:border-purple-500"
+          />
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400">🔍</span>
         </div>
-      </div>
 
-      {/* فیلتر ژانر */}
-      <div className="px-4 mb-4">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          <button className="flex-shrink-0 px-4 py-1.5 rounded-full bg-purple-600 text-white text-sm font-semibold">
-            همه
-          </button>
-          {genres?.map((genre) => (
-            <button
-              key={genre.id}
-              className="flex-shrink-0 px-4 py-1.5 rounded-full bg-white/10 text-white/70 text-sm"
-            >
-              {genre.name}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* فیلتر ژانر */}
+        {genres.length > 0 && (
+          <div className="mb-8">
+            <GenreFilter genres={genres} selected="" onSelect={() => {}} />
+          </div>
+        )}
 
-      {/* لیست آهنگ‌ها */}
-      <div className="px-4">
-        <TrackList tracks={tracks || []} />
-      </div>
+        {/* بخش ترندها */}
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <span>🔥</span> ترندهای امروز
+          </h2>
+          <TrackList tracks={tracks || []} />
+        </section>
 
+        {/* بخش پیشنهادی */}
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <span>✨</span> پیشنهاد شده برای تو
+          </h2>
+          <TrackList tracks={tracks || []} />
+        </section>
+
+      </div>
     </main>
   )
 }

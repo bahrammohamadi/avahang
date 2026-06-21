@@ -16,6 +16,7 @@ interface Track {
   id: string
   title: string
   duration?: number
+  cover_url?: string
   artists?: Artist
   sources?: Source[]
 }
@@ -57,61 +58,61 @@ export default function TrackList({ tracks }: { tracks: Track[] }) {
 
   if (!tracks.length) {
     return (
-      <div className="text-center py-12">
-        <p className="text-4xl mb-3">🎵</p>
-        <p className="text-white/50">هنوز آهنگی اضافه نشده</p>
-        <p className="text-white/30 text-sm mt-1">از پنل ادمین آهنگ اضافه کن</p>
+      <div className="bg-white/5 rounded-xl p-8 text-center">
+        <p className="text-purple-300">هنوز آهنگی اضافه نشده</p>
+        <p className="text-purple-400 text-sm mt-2">از پنل ادمین آهنگ اضافه کن</p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      {tracks.map((track, index) => {
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {tracks.map((track) => {
         const isActive = currentTrack?.id === track.id
         return (
           <div
             key={track.id}
             onClick={() => handlePlay(track)}
-            className={`flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all ${
-              isActive
-                ? 'bg-purple-600/30 border border-purple-500/40'
-                : 'hover:bg-white/5'
+            className={`relative bg-white/5 rounded-xl p-4 cursor-pointer transition group hover:bg-white/10 ${
+              isActive ? 'ring-2 ring-purple-500' : ''
             }`}
           >
-            {/* شماره یا آیکون پخش */}
-            <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold ${
-              isActive ? 'bg-purple-600 text-white' : 'bg-white/10 text-white/40'
+            {/* کاور */}
+            <div className={`aspect-square rounded-lg mb-3 flex items-center justify-center overflow-hidden ${
+              isActive ? 'bg-purple-700/50' : 'bg-gradient-to-br from-purple-800 to-purple-950'
             }`}>
-              {isActive && isPlaying ? '⏸' : (index + 1)}
-            </div>
-
-            {/* اطلاعات آهنگ */}
-            <div className="flex-1 overflow-hidden">
-              <p className={`font-semibold truncate text-sm ${
-                isActive ? 'text-purple-300' : 'text-white'
-              }`}>
-                {track.title}
-              </p>
-              <p className="text-white/40 text-xs truncate mt-0.5">
-                {track.artists?.name || 'هنرمند نامشخص'}
-              </p>
-            </div>
-
-            {/* زمان + لایک */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              {track.duration && (
-                <span className="text-white/30 text-xs">
-                  {formatTime(track.duration)}
-                </span>
+              {isActive && isPlaying ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-4 bg-purple-400 animate-pulse"></div>
+                  <div className="w-1 h-6 bg-purple-400 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1 h-3 bg-purple-400 animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              ) : (
+                <span className="text-4xl">🎵</span>
               )}
-              <button
-                onClick={e => e.stopPropagation()}
-                className="text-white/30 hover:text-red-400 transition text-lg"
-              >
-                ♡
-              </button>
+              
+              {/* آیکون پلی روی کاور */}
+              <div className={`absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition ${
+                isActive ? 'opacity-100' : ''
+              }`}>
+                <div className="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center">
+                  {isActive && isPlaying ? '⏸' : '▶'}
+                </div>
+              </div>
             </div>
+
+            {/* اطلاعات */}
+            <h3 className={`font-semibold text-sm truncate mb-1 ${isActive ? 'text-purple-300' : 'text-white'}`}>
+              {track.title}
+            </h3>
+            <p className="text-purple-400 text-xs truncate">
+              {track.artists?.name || 'هنرمند نامشخص'}
+            </p>
+            {track.duration && (
+              <p className="text-purple-500 text-xs mt-1">
+                {formatTime(track.duration)}
+              </p>
+            )}
           </div>
         )
       })}
