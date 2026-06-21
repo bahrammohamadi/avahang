@@ -39,74 +39,83 @@ export default function FullScreenPlayer() {
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-gradient-to-b from-[#2d1b4e] via-[#1a0f2e] to-[#0d0d1a] flex flex-col items-center justify-center p-8"
+      className="fixed inset-0 z-[100] bg-gradient-to-b from-[#2d1b4e] via-[#1a0f2e] to-[#0d0d1a] flex flex-col items-center justify-center"
       onClick={toggleFullScreen}
     >
-      <div className="absolute top-4 right-4">
-        <button 
-          onClick={toggleFullScreen}
-          className="text-white/70 hover:text-white text-3xl"
-        >
-          ✕
-        </button>
-      </div>
+      
+      {/* دکمه بستن */}
+      <button 
+        onClick={toggleFullScreen}
+        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition"
+      >
+        ✕
+      </button>
 
-      {/* کاور آلبوم */}
-      <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-900 shadow-2xl flex items-center justify-center mb-8">
-        <span className="text-8xl">🎵</span>
+      {/* کاور بزرگ */}
+      <div className="w-72 h-72 md:w-96 md:h-96 rounded-3xl bg-gradient-to-br from-[#4a2c7a] via-[#2d1b4e] to-[#1a0f2e] shadow-2xl shadow-purple-900/50 flex items-center justify-center mb-10 border border-purple-700/30">
+        <span className="text-9xl">🎵</span>
       </div>
 
       {/* اطلاعات آهنگ */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+      <div className="text-center mb-8 px-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
           {currentTrack.title}
         </h2>
-        <p className="text-purple-300 text-lg">
+        <p className="text-purple-300 text-xl">
           {currentTrack.artist}
         </p>
       </div>
 
       {/* نوار پیشرفت */}
-      <div className="w-full max-w-md mb-6">
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={progress}
-          onChange={handleSeek}
-          className="w-full h-2 accent-purple-400 cursor-pointer"
-        />
-        <div className="flex justify-between text-purple-400 text-sm mt-2">
+      <div className="w-full max-w-md px-6 mb-6">
+        <div className="relative">
+          <div className="h-1 bg-white/20 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={progress}
+            onChange={handleSeek}
+            className="absolute inset-0 w-full h-1 opacity-0 cursor-pointer"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+        <div className="flex justify-between text-purple-400 text-sm mt-3 font-medium">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
       </div>
 
       {/* دکمه‌های کنترل */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-8 mb-8">
         <button
           onClick={(e) => { e.stopPropagation(); prev() }}
-          className="text-white/70 hover:text-white text-4xl transition"
+          className="text-white/60 hover:text-white text-3xl transition"
         >
           ⏮
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); isPlaying ? pause() : resume() }}
-          className="w-16 h-16 rounded-full bg-white text-purple-700 flex items-center justify-center text-2xl hover:scale-105 transition"
+          className="w-20 h-20 rounded-full bg-white text-purple-700 flex items-center justify-center text-3xl hover:scale-105 transition shadow-xl shadow-white/20"
         >
           {isPlaying ? '⏸' : '▶'}
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); next() }}
-          className="text-white/70 hover:text-white text-4xl transition"
+          className="text-white/60 hover:text-white text-3xl transition"
         >
           ⏭
         </button>
       </div>
 
       {/* ولوم */}
-      <div className="flex items-center gap-3 mt-8">
-        <span className="text-purple-400">🔊</span>
+      <div className="flex items-center gap-4">
+        <button className="text-purple-400 text-xl">🔊</button>
         <input
           type="range"
           min={0}
@@ -117,9 +126,17 @@ export default function FullScreenPlayer() {
             e.stopPropagation()
             setVolume(parseFloat(e.target.value))
           }}
-          className="w-32 accent-purple-400 cursor-pointer"
+          className="w-40 accent-purple-400 cursor-pointer"
         />
       </div>
+
+      {/* لایک و شیر */}
+      <div className="flex items-center gap-6 mt-10">
+        <button className="text-purple-400 hover:text-pink-400 text-2xl transition">♡</button>
+        <button className="text-purple-400 hover:text-purple-300 text-2xl transition">↻</button>
+        <button className="text-purple-400 hover:text-purple-300 text-2xl transition">⬇</button>
+      </div>
+
     </div>
   )
 }
