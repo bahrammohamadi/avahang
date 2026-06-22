@@ -4,6 +4,8 @@ import './globals.css'
 import AudioEngine from '@/components/player/AudioEngine'
 import BottomPlayer from '@/components/player/BottomPlayer'
 import FullScreenPlayer from '@/components/player/FullScreenPlayer'
+import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 
 const vazir = Vazirmatn({
   subsets: ['arabic'],
@@ -23,7 +25,13 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${vazir.variable} font-sans bg-[#0d0d1a] text-white min-h-screen pb-24`}>
-        {children}
+        <div className="flex">
+          <Sidebar />
+          <div className="flex-1 min-w-0">
+            <Navbar />
+            {children}
+          </div>
+        </div>
         <AudioEngine />
         <BottomPlayer />
         <FullScreenPlayer />

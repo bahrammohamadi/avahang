@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎵 آواهنگ — پلتفرم موزیک فارسی
 
-## Getting Started
+پلتفرم کامل موزیک فارسی با Next.js + Supabase + Audio Player حرفه‌ای
 
-First, run the development server:
+## ✨ ویژگی‌ها
+
+- ✅ Routing کامل (خانه، آهنگ‌ها، هنرمندان، ژانرها، پلی‌لیست، جستجو)
+- ✅ Player واقعی با queue، seek، volume و auto-next
+- ✅ اتصال کامل به Supabase (SSR + Client)
+- ✅ UI مدرن، responsive و dark theme
+- ✅ Production-ready
+
+---
+
+## 🚀 راه‌اندازی محلی
+
+```bash
+git clone https://github.com/bahrammohamadi/avahang.git
+cd avahang
+npm install
+```
+
+### متغیرهای محیطی
+
+فایل `.env.local` بسازید:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+سپس:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ☁️ Deploy روی Vercel (توصیه‌شده)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### روش ۱: یک‌کلیکی (سریع‌ترین)
 
-## Learn More
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/bahrammohamadi/avahang)
 
-To learn more about Next.js, take a look at the following resources:
+### روش ۲: دستی
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. به [Vercel](https://vercel.com) برو و **Import Project** بزن
+2. Repository را انتخاب کن
+3. در بخش **Environment Variables** این دو متغیر را اضافه کن:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-## Deploy on Vercel
+4. دکمه **Deploy** را بزن
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> ⚠️ حتماً مطمئن شو که جداول `tracks`، `artists`، `genres` و `sources` در Supabase ساخته شده باشند.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📁 ساختار پروژه
+
+```
+src/app/
+├── layout.tsx           # Navbar + Sidebar + Player
+├── page.tsx             # صفحه اصلی
+├── songs/
+├── artists/
+├── genres/
+├── playlist/
+├── search/
+└── admin/
+```
+
+---
+
+## 🛠 تکنولوژی‌ها
+
+- **Next.js 16** (App Router)
+- **Supabase** (Database + Auth)
+- **Zustand** (State Management)
+- **Tailwind CSS 4**
+- **TypeScript**
+
+---
+
+## 📦 Build
+
+```bash
+npm run build
+```
+
+پروژه بدون خطا بیلد می‌شود و آماده Deploy است.
+
+---
+
+**توسعه‌دهنده:** Bahrammohamadi  
+**وضعیت:** ✅ Production Ready
+
+---
+
+*ساخته شده با ❤️ برای موزیک فارسی*
