@@ -35,6 +35,11 @@ export default function RootLayout({
         <AudioEngine />
         <BottomPlayer />
         <FullScreenPlayer />
+
+        {/* Footer - Production Ready */}
+        <footer className="hidden md:block fixed bottom-0 left-0 right-0 z-40 bg-[#0d0d1a]/80 text-center py-1 text-[10px] text-white/30 border-t border-white/10">
+          آواهنگ • Production Ready • v1.3 (Fresh Deploy)
+        </footer>
       </body>
     </html>
   )
